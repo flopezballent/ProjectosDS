@@ -1,0 +1,4 @@
+-Quedarnos solo con los tweets de un solo idioma (en - es)    
+    - Algoritmo detector de idioma
+- limpieza de tweets que no son calificativos
+    - usar ML entrenando al modelo con un set de reseñas
