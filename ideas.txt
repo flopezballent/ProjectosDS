@@ -3,3 +3,4 @@
 - limpieza de tweets que no son calificativos
     - usar ML entrenando al modelo con un set de reseñas
 -APRENDER GIT!!
+
