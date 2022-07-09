@@ -1,35 +1,34 @@
-import twint
-from langdetect import detect
+import snscrape.modules.twitter as sntwitter
 import pandas as pd
+from langdetect import detect
 
-initial_date = '2019-08-10'
-final_date = '2019-09-30'
-keywords = 'once upon a time in hollywood'
+# Creating list to append tweet data to
+tweets_list = []
+keywords = 'lightyear'
 
-#----SEARCH TWEETS-----
-
-c = twint.Config()
-c.Since = initial_date
-c.Search = keywords
-c.Until = final_date
-c.Custom["tweet"] = ['tweet']
-c.Limit = 500
-c.Pandas = True
-twint.run.Search(c)
-
-Tweets_df = twint.storage.panda.Tweets_df
+# Using TwitterSearchScraper to scrape data and append tweets to list
+for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{keywords} since:2022-05-01 until:2022-06-30').get_items()):
+    if i>50:
+        break
+    tweets_list.append([tweet.date, tweet.content, tweet.user])
+    
+# Creating a dataframe from the tweets list above
+tweets_df = pd.DataFrame(tweets_list, columns=['Datetime', 'Text', 'Username'])
+print(tweets_df)
 
 #----LANGUAGE DETECTION-----
 
 lang_list = []
-for tweet in Tweets_df.tweet:
+for tweet in tweets_df.Text:
     lang = detect(tweet)
     lang_list.append(lang)
 
-df = pd.DataFrame({'tweet': Tweets_df.tweet, 'lang': lang_list})
+df = pd.DataFrame({'tweet': tweets_df.Text, 'lang': lang_list})
 df_es = df.loc[df['lang'] == 'es']
 df_en = df.loc[df['lang'] == 'en']
 
 #----EXPORT TO CSV-----
 
+df.to_csv(f'{keywords}.csv')
 df_es.to_csv(f'{keywords}_ES.csv')
+df_en.to_csv(f'{keywords}_EN.csv')
