@@ -2,17 +2,17 @@ import snscrape.modules.twitter as sntwitter
 import pandas as pd
 from langdetect import detect
 
-# Creating list to append tweet data to
+# Creando la lista donde se almacenaron los Tweets  de la keyword a buscar.
 tweets_list = []
-keywords = 'lightyear'
+keywords = 'TopGunMaverick'
 
-# Using TwitterSearchScraper to scrape data and append tweets to list
-for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{keywords} since:2022-05-01 until:2022-06-30').get_items()):
-    if i>50:
+# Usando TwitterSearchScraper para hacer scrape data y agregar tweets a la lista
+for i,tweet in enumerate(sntwitter.TwitterSearchScraper(f'{keywords} since:2022-05-25 until:2022-05-27').get_items()):
+    if i>11700:
         break
     tweets_list.append([tweet.date, tweet.content, tweet.user])
     
-# Creating a dataframe from the tweets list above
+# Creando el DataFrame con la lista de tweets 
 tweets_df = pd.DataFrame(tweets_list, columns=['Datetime', 'Text', 'Username'])
 print(tweets_df)
 
