@@ -1,0 +1,9 @@
+review_content: review
+review_helpful: positive validation of the review from other users (like)
+review_not_helpful: negative validation of the review from other users (dislike)
+review_title: title of the review
+review_author: author of the review
+review_date: date of the review
+review_rating: movie rating given by the review's author. Number between 1 to 10
+movie_title: title of the movie
+ 
