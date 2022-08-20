@@ -1,33 +1,31 @@
 from imdb import Cinemagoer
-import pandas as pd
-import numpy as np
 import json
-
 import pprint
-pp = pprint.PrettyPrinter(indent=4)
+import api_query
 
+pp = pprint.PrettyPrinter(indent=4)
 
 cg = Cinemagoer()
 movies = []
 
+years = list(range(1990, 2021))
+json_list = api_query.search_movies(years)
 
+for j in json_list:
+    #Iterate movies to get ID and then the reviews
+    for m in j:
+        movie_id = m['id'].replace('tt', '')
+        movie = cg.get_movie(movie_id)
+        pp.pprint(movie)
+        cg.update(movie, info=['original title', 'votes', 'rating', 'reviews' ])
 
-imdb_file = open('top250.json')
-json_imdb = json.load(imdb_file)
+        #Some movies dosen't have review so we skip that ones
+        try:
+            movies.append( {'title':movie['original title'], 'reviews': movie['reviews']})
+        except:
+            pass
 
-i = 0
-
-for m in json_imdb['items']:
-    
-    movie_id = m['id'].replace('tt', '')
-    movie = cg.get_movie(movie_id)
-    
-    cg.update(movie, info=['original title', 'votes', 'rating', 'reviews' ])
-    movies.append( {'title':movie['original title'], 'reviews': movie['reviews']})
-
-
-
-with open('movie_dump.json', 'w') as dump_file:
-
+#Save json file 
+with open('reviews_dump.json', 'w') as dump_file:
     json_string = json.dumps(movies)
     json.dump(movies, dump_file)
